@@ -85,18 +85,30 @@ def get_distro(distro_id):
     return jsonify({"message": "Distro not found"}), 404
 
 
+from datetime import datetime
+
 @app.route('/distros/<int:distro_id>', methods=['PUT'])
 def update_distro(distro_id):
     distro = Distro.query.get(distro_id)
     if not distro:
-        return jsonify({"message" : "Distro not found"}), 404
+        return jsonify({"message": "Distro not found"}), 404
+
+    data = request.get_json()
 
     for key, value in data.items():
         if hasattr(distro, key):
+            if key == "release_date" and isinstance(value, str):
+                try:
+                    value = datetime.strptime(value, "%Y-%m-%d").date()
+                except ValueError:
+                    return jsonify({"message": "Invalid date format. Use YYYY-MM-DD"}), 400
+
             setattr(distro, key, value)
 
     db.session.commit()
     return jsonify(distro.to_dict()), 200
+
+
     
 @app.route('/distros/<int:distro_id>', methods=['DELETE'])
 def delete_distro(distro_id):
