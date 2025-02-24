@@ -85,8 +85,6 @@ def get_distro(distro_id):
     return jsonify({"message": "Distro not found"}), 404
 
 
-from datetime import datetime
-
 @app.route('/distros/<int:distro_id>', methods=['PUT'])
 def update_distro(distro_id):
     distro = Distro.query.get(distro_id)
@@ -118,11 +116,6 @@ def delete_distro(distro_id):
         db.session.commit()
         return jsonify({"message": "Distro deleted"}), 200
     return jsonify({"message": "Distro not found"}), 404
-
-
-@app.route('/')
-def index():
-    return 'Index Page'
 
 if __name__ == '__main__':
     app.run(debug=True)
