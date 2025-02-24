@@ -12,3 +12,13 @@ class Distro(db.Model):
 
     def __repr__(self):
         return f"<Distro {self.name} {self.version}>"
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'version': self.version,
+            'release_date': self.release_date.isoformat() if self.release_date else None,
+            'architecture': self.architecture,
+            'website': self.website
+        }
